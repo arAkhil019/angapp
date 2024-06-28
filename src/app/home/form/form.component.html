@@ -1,0 +1,53 @@
+<h3>Add Employee</h3>
+<!-- <div class="card flex justify-content-center">
+    <p-floatLabel>
+        <input pInputText id="username" [(ngModel)]="username" />
+        <label for="username">Username</label>
+    </p-floatLabel>
+    <p-inputNumber 
+    [(ngModel)]="salaray"
+    mode="currency" 
+    inputId="currency-india" 
+    currency="INR" 
+    currencyDisplay="code" 
+    locale="en-IN" />
+</div> -->
+<div class="card flex flex-column md:flex-row gap-3">
+    <p-inputGroup>
+        <p-inputGroupAddon>
+            <i class="pi pi-user"></i>
+        </p-inputGroupAddon>
+        <input pInputText placeholder="Username" />
+    </p-inputGroup>
+    <p-inputGroup>
+        <p-inputGroupAddon>₹</p-inputGroupAddon>
+        <input type="text" pInputText placeholder="Salaray" />
+        <p-inputGroupAddon>.0</p-inputGroupAddon>
+    </p-inputGroup>
+    <p-inputGroup>
+        <p-inputGroupAddon>
+            <i class="pi pi-phone"></i>
+        </p-inputGroupAddon>
+        <input pInputText placeholder="Contact Number" />
+    </p-inputGroup>
+    <p-inputGroup>
+        <p-inputGroupAddon>
+            <i class="pi pi-phone"></i>
+        </p-inputGroupAddon>
+        <input pInputText placeholder="Aadhar No." />
+    </p-inputGroup>
+    <p-inputGroup>
+        <p-inputGroupAddon>
+            <i class="pi pi-phone"></i>
+        </p-inputGroupAddon>
+        <input pInputText placeholder="PAN No." />
+    </p-inputGroup>
+    <div class="card flex justify-content-center">
+        <p-dropdown 
+            [options]="roles" 
+            [(ngModel)]="selectedRole" 
+            optionLabel="name"
+            placeholder="Select a Role" />
+    </div>
+    
+</div>
