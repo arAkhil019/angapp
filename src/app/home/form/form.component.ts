@@ -7,11 +7,12 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
-import { ApplicationConfig } from '@angular/core';
-import { provideRouter } from '@angular/router';
+
 import { CommonModule } from '@angular/common';
 import { Role, Employee } from '../../models/common.model';
 import { EmployeeService } from '../../services/employee.service';
+
+
 
 
 @Component({
@@ -45,7 +46,8 @@ export class FormComponent implements OnInit {
     Pan: '',
     Proof: '',
     Salaray: 0,
-    Type: ''
+    Type: '',
+    Time: ''
   };
 
   constructor( private db: EmployeeService ) { }
@@ -60,13 +62,15 @@ export class FormComponent implements OnInit {
     this.empObj.Name = this.Name;
     this.empObj.Salaray = this.Salaray;
     this.empObj.Type = this.Type;
-    console.log(this.Type);
     this.empObj.ID = this.ID;
     this.empObj.Contact = this.Contact;
     this.empObj.Aadhar = this.Aadhar;
+    this.empObj.Pan = this.Pan;
+    this.empObj.Proof = this.Proof;
+    this.empObj.Time = new Date().toISOString();
 
     // this.db.addEmployee(this.empObj);
-    alert(this.selectedRole + ' ' + this.empObj.Name + ' ' + this.empObj.Salaray + ' ' + this.empObj.ID + ' ' + this.empObj.Contact + ' ' + this.empObj.Aadhar);
+    // alert(this.selectedRole + ' ' + this.empObj.Name + ' ' + this.empObj.Salaray + ' ' + this.empObj.ID + ' ' + this.empObj.Contact + ' ' + this.empObj.Aadhar);
   }
 }
 

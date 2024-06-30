@@ -7,6 +7,7 @@ export interface Employee {
     Proof: string;
     Salaray: number;
     Type: string;
+    Time: string;
 }
 
 export interface Role {
