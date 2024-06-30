@@ -10,6 +10,4 @@ export interface Employee {
 }
 
 export interface Role {
-    name: string;
-    code: string;
 }

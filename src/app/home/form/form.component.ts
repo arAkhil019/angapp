@@ -48,25 +48,25 @@ export class FormComponent implements OnInit {
     Type: ''
   };
 
-  // constructor( private db: EmployeeService ) { }
+  constructor( private db: EmployeeService ) { }
 
   ngOnInit() {
     this.roles = [
-      { name: 'Full Time', code: 'FT' },
-      { name: 'Contractor', code: 'CT' },
-      { name: 'Intern', code: 'IT' }
+      'Full Time','Contractor','Intern'
       ];
     };
   
   addEmployee(){
     this.empObj.Name = this.Name;
     this.empObj.Salaray = this.Salaray;
-    this.empObj.Type = this.selectedRole;
+    this.empObj.Type = this.Type;
+    console.log(this.Type);
     this.empObj.ID = this.ID;
     this.empObj.Contact = this.Contact;
     this.empObj.Aadhar = this.Aadhar;
+
     // this.db.addEmployee(this.empObj);
-    alert(this.empObj.Name);
+    alert(this.selectedRole + ' ' + this.empObj.Name + ' ' + this.empObj.Salaray + ' ' + this.empObj.ID + ' ' + this.empObj.Contact + ' ' + this.empObj.Aadhar);
   }
 }
 
