@@ -11,16 +11,28 @@ import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { Role, Employee } from '../../models/common.model';
 import { EmployeeService } from '../../services/employee.service';
+import { HttpClient } from '@angular/common/http';
 
 
+// import { Component } from '@angular/core';
+import { MessageService } from 'primeng/api';
+import { FileUploadModule } from 'primeng/fileupload';
+import { ToastModule } from 'primeng/toast';
+import { HttpClientModule } from '@angular/common/http';
 
+
+interface UploadEvent {
+  originalEvent: Event;
+  files: File[];
+}
 
 @Component({
   selector: 'app-form',
   standalone: true,
-  imports: [CommonModule, InputTextModule, FloatLabelModule, FormsModule, InputNumberModule, InputGroupModule, InputGroupAddonModule, DropdownModule, ButtonModule],
+  imports: [CommonModule, InputTextModule, FloatLabelModule, FormsModule, InputNumberModule, InputGroupModule, InputGroupAddonModule, DropdownModule, ButtonModule, FileUploadModule, ToastModule, HttpClientModule],
   templateUrl: './form.component.html',
-  styleUrl: './form.component.css'
+  styleUrl: './form.component.css',
+  providers: [ MessageService ]
 })
 
 
@@ -50,7 +62,16 @@ export class FormComponent implements OnInit {
     Time: ''
   };
 
-  constructor( private db: EmployeeService ) { }
+
+
+
+  constructor( private db: EmployeeService, private http: HttpClient, private messageService: MessageService) { }
+
+    onUpload($event: any) {
+        this.messageService.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded with Basic Mode' });
+        console.log($event);
+    }
+
 
   ngOnInit() {
     this.roles = [
