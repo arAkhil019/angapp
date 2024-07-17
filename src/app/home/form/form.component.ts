@@ -16,9 +16,10 @@ import { HttpClient } from '@angular/common/http';
 
 // import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { FileUploadModule } from 'primeng/fileupload';
+import { FileUploadHandlerEvent, FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { HttpClientModule } from '@angular/common/http';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 
 
 interface UploadEvent {
@@ -63,14 +64,15 @@ export class FormComponent implements OnInit {
   };
 
 
-
-
   constructor( private db: EmployeeService, private http: HttpClient, private messageService: MessageService) { }
 
-    onUpload($event: any) {
+    async onUpload($event: FileUploadHandlerEvent) {
         this.messageService.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded with Basic Mode' });
+        if($event.files.length != 0) {
+        const file = $event.files[0];
+        this.db.uploadProof(file);
         console.log($event);
-    }
+    }}
 
 
   ngOnInit() {

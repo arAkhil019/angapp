@@ -1,10 +1,9 @@
-import { Injectable } from "@angular/core";
-import exp from "constants";
-import { AngularFireDatabase, AngularFireList } from "@angular/fire/compat/database"; 
+import { importProvidersFrom, Injectable } from "@angular/core";
 import { Employee } from "../models/common.model";
 import db from "./data.service";
 import { collection, addDoc } from "firebase/firestore";
-
+import storage from "./image.service";
+import { uploadBytes, ref } from "firebase/storage";
 
 @Injectable({
     providedIn: 'root'
@@ -12,6 +11,7 @@ import { collection, addDoc } from "firebase/firestore";
 
 export class EmployeeService {
 
+    constructor(){}
 
     // Create Employee/ Add Employee
     addEmployee(employee: Employee){
@@ -57,4 +57,18 @@ export class EmployeeService {
             return 'Error updating document';
         }
     }
+
+    // Uplaod Proof
+    async uploadProof(file: any){
+        try{
+            const storageRef = ref(storage, 'proofs/')
+            const imgRef = ref(storageRef, file.name);
+            await uploadBytes(imgRef, file).then((snapshot) => {
+                console.log('Uploaded a blob or file!', snapshot);
+            });
+        }
+        catch(e){
+            console.error('Error uploading proof: ', e);
+    }
+}
 }
