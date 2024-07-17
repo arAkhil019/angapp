@@ -18,51 +18,53 @@
         <p-inputGroupAddon>
             <i class="pi pi-user"></i>
         </p-inputGroupAddon>
-        <input pInputText placeholder="Username" [(ngModel)]="Name" name="Name" />
+        <input pInputText placeholder="Username" [(ngModel)]="Name" name="Name" [required]="true" />
     </p-inputGroup>
     <p-inputGroup>
         <p-inputGroupAddon>₹</p-inputGroupAddon>
-        <input type="number" pInputText placeholder="Salaray" [(ngModel)]="Salaray" name="Salaray"/>
+        <input type="number" pInputText placeholder="Salaray" [(ngModel)]="Salaray" name="Salaray" [required]="true" />
         <p-inputGroupAddon>.0</p-inputGroupAddon>
     </p-inputGroup>
     <p-inputGroup>
         <p-inputGroupAddon>
             <i class="pi pi-phone"></i>
         </p-inputGroupAddon>
-        <input pInputText placeholder="Contact Name" [(ngModel)]="Contact" name="Contact"/>
+        <input pInputText placeholder="Contact Name" [(ngModel)]="Contact" name="Contact" [required]="true"/>
     </p-inputGroup>
     <p-inputGroup>
         <p-inputGroupAddon>
             <i class="pi pi-phone"></i>
         </p-inputGroupAddon>
-        <input pInputText placeholder="Aadhar No." [(ngModel)]="Aadhar" type="number" name="Aadhar"/>
+        <input pInputText placeholder="Aadhar No." [(ngModel)]="Aadhar" type="number" name="Aadhar" [required]="true"/>
     </p-inputGroup>
     <p-inputGroup>
         <p-inputGroupAddon>
             <i class="pi pi-phone"></i>
         </p-inputGroupAddon>
-        <input pInputText placeholder="PAN No." aria-required="true" [(ngModel)]="Pan" name="Pan"/>
+        <input pInputText placeholder="PAN No." aria-required="true" [(ngModel)]="Pan" name="Pan" [required]="true"/>
     </p-inputGroup>
     <div class="card flex justify-content-center">
         <p-dropdown 
             [options]="roles" 
             [(ngModel)]="Type"
-            placeholder="Select a Role" name="Role" />
+            placeholder="Select a Role" name="Role" [required]="true" />
     </div>
     <div class="card flex justify-content-center">
         <p-button label="Submit" (onClick)="addEmployee()" />
     </div>
 </form>
 <div class="card flex justify-content-center">
-    <p-toast />
+    <img [src]="imageSrc">
     <p-fileUpload 
         mode="basic" 
         chooseLabel="Choose" 
         chooseIcon="pi pi-upload"
         name="demo[]" 
         url="https://www.primefaces.org/cdn/api/upload.php" 
-        accept="image/*" 
+        accept=".jpg,.png,.pdf,.jpeg"
+        auto="true"
         [maxFileSize]="1000000" 
-        (onUpload)="onUpload($event)" />
+        (onUpload)="onUpload($event)"
+        [ariaRequired]="true"/>
 </div>
 </div>

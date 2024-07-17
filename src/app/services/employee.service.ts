@@ -1,4 +1,4 @@
-import { importProvidersFrom, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { Employee } from "../models/common.model";
 import db from "./data.service";
 import { collection, addDoc } from "firebase/firestore";
@@ -59,10 +59,11 @@ export class EmployeeService {
     }
 
     // Uplaod Proof
-    async uploadProof(file: any){
+    async uploadProof(file: any, name: String){
         try{
             const storageRef = ref(storage, 'proofs/')
-            const imgRef = ref(storageRef, file.name);
+            console.log(file);
+            const imgRef = ref(storageRef, name+'.'+file.name.split('.').pop());
             await uploadBytes(imgRef, file).then((snapshot) => {
                 console.log('Uploaded a blob or file!', snapshot);
             });

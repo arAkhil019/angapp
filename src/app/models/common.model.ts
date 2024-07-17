@@ -4,7 +4,7 @@ export interface Employee {
     ID: string;
     Name: string;
     Pan: string;
-    Proof: string;
+    Proof: File;
     Salaray: number;
     Type: string;
     Time: string;

@@ -17,9 +17,8 @@ import { HttpClient } from '@angular/common/http';
 // import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { FileUploadHandlerEvent, FileUploadModule } from 'primeng/fileupload';
-import { ToastModule } from 'primeng/toast';
+// import { ToastModule } from 'primeng/toast';
 import { HttpClientModule } from '@angular/common/http';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
 
 
 interface UploadEvent {
@@ -30,7 +29,7 @@ interface UploadEvent {
 @Component({
   selector: 'app-form',
   standalone: true,
-  imports: [CommonModule, InputTextModule, FloatLabelModule, FormsModule, InputNumberModule, InputGroupModule, InputGroupAddonModule, DropdownModule, ButtonModule, FileUploadModule, ToastModule, HttpClientModule],
+  imports: [CommonModule, InputTextModule, FloatLabelModule, FormsModule, InputNumberModule, InputGroupModule, InputGroupAddonModule, DropdownModule, ButtonModule, FileUploadModule, HttpClientModule],
   templateUrl: './form.component.html',
   styleUrl: './form.component.css',
   providers: [ MessageService ]
@@ -46,9 +45,10 @@ export class FormComponent implements OnInit {
   ID: string = '';
   Name: string = '';
   Pan: string = '';
-  Proof: string = '';
+  Proof: File = new File([], '');
   Salaray: number = 0;
   Type: string = '';
+  imageSrc: string = '';
 
   employee: Employee[] = [];
   empObj: Employee = {
@@ -57,7 +57,7 @@ export class FormComponent implements OnInit {
     ID: '',
     Name: '',
     Pan: '',
-    Proof: '',
+    Proof: new File([], ''),
     Salaray: 0,
     Type: '',
     Time: ''
@@ -70,7 +70,13 @@ export class FormComponent implements OnInit {
         this.messageService.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded with Basic Mode' });
         if($event.files.length != 0) {
         const file = $event.files[0];
-        this.db.uploadProof(file);
+        this.Proof = file;
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+            // Set image src
+            this.imageSrc = e.target.result;
+        }
+        reader.readAsDataURL($event.files[0]);
         console.log($event);
     }}
 
@@ -92,8 +98,14 @@ export class FormComponent implements OnInit {
     this.empObj.Proof = this.Proof;
     this.empObj.Time = new Date().toISOString();
 
-    // this.db.addEmployee(this.empObj);
-    // alert(this.selectedRole + ' ' + this.empObj.Name + ' ' + this.empObj.Salaray + ' ' + this.empObj.ID + ' ' + this.empObj.Contact + ' ' + this.empObj.Aadhar);
+    if(this.Aadhar, this.Contact, this.ID, this.Name, this.Pan, this.Proof, this.Salaray, this.Type, this.imageSrc){
+    this.db.addEmployee(this.empObj);
+    const fileName = this.Name + this.empObj.Time;
+    this.db.uploadProof(this.Proof, fileName);
+    alert(this.selectedRole + ' ' + this.empObj.Name + ' ' + this.empObj.Salaray + ' ' + this.empObj.ID + ' ' + this.empObj.Contact + ' ' + this.empObj.Aadhar);
+    }else{
+      alert('Please fill all the fields/Proof not uploaded');
+    }
   }
 }
 
