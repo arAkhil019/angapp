@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { environment } from "../../environments/environment";
-import { getStorage, uploadBytes } from "firebase/storage";
+import { getStorage } from "firebase/storage";
 
 const app = initializeApp(environment.firebaseConfig);
 

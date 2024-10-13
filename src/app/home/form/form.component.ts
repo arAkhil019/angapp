@@ -45,7 +45,7 @@ export class FormComponent implements OnInit {
   ID: string = '';
   Name: string = '';
   Pan: string = '';
-  Proof: File = new File([], '');
+  fileProof: File = new File([], '');
   Salaray: number = 0;
   Type: string = '';
   imageSrc: string = '';
@@ -57,7 +57,7 @@ export class FormComponent implements OnInit {
     ID: '',
     Name: '',
     Pan: '',
-    Proof: new File([], ''),
+    Proof: '',
     Salaray: 0,
     Type: '',
     Time: ''
@@ -70,7 +70,7 @@ export class FormComponent implements OnInit {
         this.messageService.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded with Basic Mode' });
         if($event.files.length != 0) {
         const file = $event.files[0];
-        this.Proof = file;
+        this.fileProof = file;
         const reader = new FileReader();
         reader.onload = (e: any) => {
             // Set image src
@@ -87,6 +87,17 @@ export class FormComponent implements OnInit {
       ];
     };
   
+  resetForm(){
+    this.Aadhar = 0;
+    this.Contact = '';
+    this.ID = '';
+    this.Name = '';
+    this.Pan = '';
+    this.fileProof = new File([], '');
+    this.Salaray = 0;
+    this.Type = '';
+    this.imageSrc = '';
+  }
   addEmployee(){
     this.empObj.Name = this.Name;
     this.empObj.Salaray = this.Salaray;
@@ -95,17 +106,21 @@ export class FormComponent implements OnInit {
     this.empObj.Contact = this.Contact;
     this.empObj.Aadhar = this.Aadhar;
     this.empObj.Pan = this.Pan;
-    this.empObj.Proof = this.Proof;
+    this.empObj.Proof = '';
     this.empObj.Time = new Date().toISOString();
 
-    if(this.Aadhar, this.Contact, this.ID, this.Name, this.Pan, this.Proof, this.Salaray, this.Type, this.imageSrc){
-    this.db.addEmployee(this.empObj);
-    const fileName = this.Name + this.empObj.Time;
-    this.db.uploadProof(this.Proof, fileName);
-    alert(this.selectedRole + ' ' + this.empObj.Name + ' ' + this.empObj.Salaray + ' ' + this.empObj.ID + ' ' + this.empObj.Contact + ' ' + this.empObj.Aadhar);
-    }else{
-      alert('Please fill all the fields/Proof not uploaded');
+    // Corrected conditional check
+    if (this.Aadhar, this.Contact, this.ID, this.Name, this.Pan, this.fileProof, this.Salaray, this.Type , this.imageSrc) {
+      const fileName = this.Name + this.empObj.ID;
+      this.empObj.Proof = fileName;
+      console.log('Adding employee:', this.empObj); // Logging the employee object
+      this.db.addEmployee(this.empObj)
+      console.log('Employee added:', this.empObj); // Logging the response from the database
+      this.db.uploadProof(this.fileProof, fileName);
+      alert(this.selectedRole + ' ' + this.empObj.Name + ' ' + this.empObj.Salaray + ' ' + this.empObj.ID + ' ' + this.empObj.Contact + ' ' + this.empObj.Aadhar);
+      this.resetForm();
+    } else {
+        alert('Please fill all the fields/Proof not uploaded');
     }
   }
 }
-
