@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import db from "./data.service";
 import storage from "./image.service";
 import { collection, query, where, getDoc, getDocs, doc } from "firebase/firestore";
+import { ref } from "firebase/storage";
 
 
 @Injectable({
@@ -26,4 +27,5 @@ export class ViewService{
         console.log(`Fetched employees in ${Date.now() - start} ms`);
         return querySnapshot;
     }
+
 }
