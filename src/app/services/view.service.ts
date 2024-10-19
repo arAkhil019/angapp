@@ -10,17 +10,20 @@ import { collection, query, where, getDoc, getDocs, doc } from "firebase/firesto
 
 export class ViewService{
     constructor(){
-        this.getEmployeesList();
+        // this.getEmployeesList();
     }
 
     // Get all Employees
     async getEmployeesList(){
+        console.log('Fetching employees...');
+        const start = Date.now();
         const q = query(collection(db, 'employees'));
 
         const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-            console.log(doc);
-        })
+        // querySnapshot.forEach((doc) => {
+        //     console.log(doc);
+        // })
+        console.log(`Fetched employees in ${Date.now() - start} ms`);
         return querySnapshot;
     }
 }

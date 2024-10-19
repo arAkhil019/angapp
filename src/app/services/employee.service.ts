@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Employee } from "../models/common.model";
 import db from "./data.service";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, QuerySnapshot, DocumentData } from "firebase/firestore";
 import storage from "./image.service";
 import { uploadBytes, ref } from "firebase/storage";
 
@@ -25,16 +25,6 @@ export class EmployeeService {
         }
     }
 
-    // Get all Employees
-    getEmplyeesList(){
-        try{
-            return collection(db, 'employees');
-        }
-        catch(e){
-            console.error('Error getting documents: ', e);
-            return 'Error getting documents';
-        }
-    }
 
     // Delete Employee
     deleteEmployee(key: string){

@@ -7,6 +7,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { TagModule } from 'primeng/tag';
 import { Employee } from '../../models/common.model';
 import { ViewService } from '../../services/view.service';
+import { DocumentData, QuerySnapshot } from 'firebase/firestore';
 
 @Component({
   selector: 'app-show',
@@ -17,7 +18,7 @@ import { ViewService } from '../../services/view.service';
 })
 export class ShowComponent {
   employees!: Employee[];
-  items!: any;
+  items!: any[];
 
   selectedEmployees!: Employee;
 
@@ -25,6 +26,9 @@ export class ShowComponent {
 
   ngOnInit() {
   // this.ViewService.getEmployeesList()    toPromise().then((data: Employee[]) => (this.employees = data));
-    this.items = this.ViewService.getEmployeesList();
+    this.ViewService.getEmployeesList().then((snapshot: QuerySnapshot<DocumentData>) => {
+      this.items = snapshot.docs.map(doc => doc.data() as Employee);
+      console.log(this.items);
+    });
   }
 }
