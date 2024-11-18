@@ -1,23 +1,25 @@
 import { Injectable } from "@angular/core";
 import { Employee } from "../models/common.model";
 import db from "./data.service";
-import { collection, addDoc, getDocs, QuerySnapshot, DocumentData } from "firebase/firestore";
+import { collection, doc, setDoc, addDoc, deleteDoc } from "firebase/firestore";
 import storage from "./image.service";
-import { uploadBytes, ref } from "firebase/storage";
+import { uploadBytes, ref, deleteObject } from "firebase/storage";
+
 
 @Injectable({
     providedIn: 'root'
 })
 
-export class EmployeeService {
+export class EmployeeService { 
 
     constructor(){}
 
     // Create Employee/ Add Employee
-    addEmployee(employee: Employee){
+    async addEmployee(employee: Employee){
         // employee.ID = this.db.createPushId();
         try{
-            addDoc(collection(db, 'employees'), employee);
+            const docRef = await addDoc(collection(db, 'employees'), employee);
+            await setDoc(docRef, { ...employee, ID: docRef.id });
             console.log('Document added with ID: ', employee.ID);
         }
         catch(e){
@@ -27,13 +29,15 @@ export class EmployeeService {
 
 
     // Delete Employee
-    deleteEmployee(key: string){
+    deleteEmployee(employee: Employee){
         try{
-            return '';
+            this.deleteProof(employee.Proof as string);
+            deleteDoc(doc(db, 'employees', employee.ID));
+            return 'Employee removed successfully';
         }
         catch(e){
             console.error('Error deleting document: ', e);
-            return 'Error deleting document';
+            return 'Error removing employee';
         }
     }
 
@@ -49,17 +53,29 @@ export class EmployeeService {
     }
 
     // Uplaod Proof
-    async uploadProof(file: any, name: String){
+    async uploadProof(file: any, name: String, time: string){
         try{
             const storageRef = ref(storage, 'proofs/')
             console.log(file);
-            const imgRef = ref(storageRef, name+'.'+file.name.split('.').pop());
+            const imgRef = ref(storageRef, name + time +'.'+file.name.split('.').pop());
             await uploadBytes(imgRef, file).then((snapshot) => {
                 console.log('Uploaded a blob or file!', snapshot);
             });
         }
         catch(e){
             console.error('Error uploading proof: ', e);
+    }}
+
+    //delete image
+    async deleteProof(name: string){
+        try{
+            const storageRef = ref(storage, 'proofs/')
+            const imgRef = ref(storageRef, name);
+            deleteObject(imgRef).then(() => {
+                console.log('Image deleted successfully');
+            });}
+        catch(e){
+            console.error('Error deleting image: ', e);
+        }
     }
-}
 }

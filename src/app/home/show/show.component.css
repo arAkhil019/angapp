@@ -4,3 +4,11 @@
     margin: 0 auto 2rem auto;
     display: block;
 }
+*{
+    gap: 2rem;
+}
+img{
+    width: 60px;
+    height: 100%;
+    border-radius: 60px;
+}

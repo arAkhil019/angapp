@@ -112,11 +112,11 @@ export class FormComponent implements OnInit {
     // Corrected conditional check
     if (this.Aadhar, this.Contact, this.ID, this.Name, this.Pan, this.fileProof, this.Salaray, this.Type , this.imageSrc) {
       const fileName = this.Name + this.empObj.ID;
-      this.empObj.Proof = fileName;
+      this.empObj.Proof = fileName + '.' + this.fileProof.name.split('.').pop();
       console.log('Adding employee:', this.empObj); // Logging the employee object
       this.db.addEmployee(this.empObj)
       console.log('Employee added:', this.empObj); // Logging the response from the database
-      this.db.uploadProof(this.fileProof, fileName);
+      this.db.uploadProof(this.fileProof, fileName, this.empObj.Time);
       alert(this.selectedRole + ' ' + this.empObj.Name + ' ' + this.empObj.Salaray + ' ' + this.empObj.ID + ' ' + this.empObj.Contact + ' ' + this.empObj.Aadhar);
       this.resetForm();
     } else {

@@ -1,13 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, viewChild, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Subscription, finalize } from 'rxjs';
 import { InputIconModule } from 'primeng/inputicon';
 import { Employee } from '../../models/common.model';
 import { ViewService } from '../../services/view.service';
 import { ConfirmationService,MessageService } from 'primeng/api';
 import { DocumentData, QuerySnapshot } from 'firebase/firestore';
+import { EmployeeService } from '../../services/employee.service';
+import { SkeletonModule } from 'primeng/skeleton';
+import { collection, query, orderBy, startAfter, limit, getDocs } from 'firebase/firestore';
 
 
-import { TableModule } from 'primeng/table';
+import { TableModule, Table } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { Ripple } from 'primeng/ripple';
 import { ButtonModule } from 'primeng/button';
@@ -39,6 +43,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
     InputNumberModule,
     DialogModule,
     Ripple,
+    SkeletonModule,
     ButtonModule,
     ToastModule,
     ToolbarModule,
@@ -55,36 +60,138 @@ import { InputNumberModule } from 'primeng/inputnumber';
         gap: 1rem;
     }`]
 })
-export class ShowComponent implements OnInit {
+export class ShowComponent{
+    @ViewChild('dt') table!: TableModule;
+
     employeeDialog: boolean = false;
-
-    employees!: Employee[];
-
+    employees: Employee[] = [];
     employee!: Employee;
-
-    selectedEmployees!: Employee[] | null;
-
+    selectedEmployees: Employee[] | null = null;
     submitted: boolean = false;
+    loading: boolean = true;
+    error: string | null = null;
+    virtualScroll: boolean = true;
+    loadingMore: boolean = false;
+    noMoreData: boolean = false;
 
-    statuses!: any[];
-    items!: any[];
+    getSeverity(type: string) {
+        switch (type) {
+            case 'Full Time':
+                return 'success';
+            case 'Intern':
+                return 'info';
+            case 'Contractor':
+                return 'warning';
+            default:
+                return null;
+        }
+    }
+    
+    private subscriptions: Subscription[] = [];
+    private scrollThreshold = 90;
 
-
-    constructor(private ViewService: ViewService, 
+    constructor(
+        private EmployeeSerive: EmployeeService, 
+        private viewService: ViewService, 
         private confirmationService: ConfirmationService, 
-        private messageService: MessageService
+        private messageService: MessageService,
+        private changeDetectorRef: ChangeDetectorRef
     ) {}
 
     ngOnInit() {
-    // getting the employees list on component initialization
-    this.ViewService.getEmployeesList().then(
-        (snapshot: QuerySnapshot<DocumentData>) => {
-          this.items = snapshot.docs.map((doc) => doc.data() as Employee);
-          console.log(this.items);
-          this.employees = this.items;
-      });
+        this.loadInitialData();
+        // this.viewService.getEmployeesData<Employee>('employees')
+        //   .subscribe({
+        // next: (data: Employee[]) => {
+        //   this.employees = data;
+        //   this.loading = false;
+        // },
+        // error: (error: any) => {
+        //   console.error('Error fetching employees:', error);
+        //   this.error = error;
+        //   this.loading = false;
+        //   this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error fetching employees', life: 3000 });
+        // }
+        //   });
     }
 
+    private loadInitialData() {
+        this.loading = true;
+        const subscription = this.viewService
+            .getEmployeesData<Employee>('employees', 'Name', 'asc')
+            .pipe(finalize(() => {
+                this.loading = false;
+                this.changeDetectorRef.detectChanges();
+            }))
+            .subscribe({
+                next: (data: Employee[]) => {
+                    this.employees = data;
+                    this.error = null;
+                },
+                error: (error: any) => {
+                    console.error('Error fetching employees:', error);
+                    this.error = 'Failed to load employees. Please try again.';
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: this.error,
+                        life: 3000
+                    });
+                }
+            });
+
+        this.subscriptions.push(subscription);
+    }
+
+    onScroll(event: any) {
+        if (this.loadingMore || this.noMoreData) return;
+
+        const element = event.target;
+        const scrollPosition = element.scrollTop + element.clientHeight;
+        const scrollHeight = element.scrollHeight;
+        const scrollPercentage = (scrollPosition / scrollHeight) * 100;
+
+        if (scrollPercentage > this.scrollThreshold) {
+            this.loadMoreData();
+        }
+    }
+
+    loadMoreData() {
+        if (this.loadingMore) return;
+
+        this.loadingMore = true;
+        const subscription = this.viewService.loadMoreEmployees()
+            .pipe(finalize(() => {
+                this.loadingMore = false;
+                this.changeDetectorRef.detectChanges();
+            }))
+            .subscribe({
+                next: (newEmployees: Employee[]) => {
+                    if (newEmployees.length === 0) {
+                        this.noMoreData = true;
+                        return;
+                    }
+                    this.employees = [...this.employees, ...newEmployees];
+                },
+                error: (error: any) => {
+                    if (error.message === 'No more data available') {
+                        this.noMoreData = true;
+                    } else {
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: 'Failed to load more employees',
+                            life: 3000
+                        });
+                    }
+                }
+            });
+
+        this.subscriptions.push(subscription);
+    }
+    ngOnDestroy() {
+        this.subscriptions.forEach(sub => sub.unsubscribe());
+    }
     openNew() {
         // write code to divert page to form component
         this.submitted = false;
@@ -116,6 +223,7 @@ export class ShowComponent implements OnInit {
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
                 this.employees = this.employees.filter((val) => val.ID !== employee.ID);
+                this.EmployeeSerive.deleteEmployee(employee);
                 //write code to reset the form
                 this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Employe Deleted', life: 3000 });
             }
