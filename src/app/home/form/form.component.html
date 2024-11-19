@@ -8,23 +8,25 @@
                     <p-inputGroupAddon>
                         <i class="pi pi-user"></i>
                     </p-inputGroupAddon>
-                    <input 
-                        pInputText 
-                        placeholder="Username" 
-                        [(ngModel)]="Name" 
-                        name="Name" 
-                        [required]="true" />
+                    <input
+                        pInputText
+                        placeholder="Username"
+                        [(ngModel)]="Name"
+                        name="Name"
+                        [required]="true"
+                    />
                 </p-inputGroup>
             </div>
 
             <!-- Role -->
             <div class="p-field">
-                <p-dropdown 
-                    [options]="roles" 
-                    [(ngModel)]="Type" 
-                    placeholder="Select a Role" 
-                    name="Role" 
-                    [required]="true">
+                <p-dropdown
+                    [options]="roles"
+                    [(ngModel)]="Type"
+                    placeholder="Select a Role"
+                    name="Role"
+                    [required]="true"
+                >
                 </p-dropdown>
             </div>
 
@@ -32,13 +34,14 @@
             <div class="p-field">
                 <p-inputGroup>
                     <p-inputGroupAddon>₹</p-inputGroupAddon>
-                    <input 
-                        type="number" 
-                        pInputText 
-                        placeholder="Salary" 
-                        [(ngModel)]="Salaray" 
-                        name="Salary" 
-                        [required]="true" />
+                    <input
+                        type="number"
+                        pInputText
+                        placeholder="Salary"
+                        [(ngModel)]="Salaray"
+                        name="Salary"
+                        [required]="true"
+                    />
                     <p-inputGroupAddon>.00</p-inputGroupAddon>
                 </p-inputGroup>
             </div>
@@ -49,12 +52,13 @@
                     <p-inputGroupAddon>
                         <i class="pi pi-address-book"></i>
                     </p-inputGroupAddon>
-                    <input 
-                        pInputText 
-                        placeholder="Contact Name" 
-                        [(ngModel)]="Contact" 
-                        name="Contact" 
-                        [required]="true" />
+                    <input
+                        pInputText
+                        placeholder="Contact Name"
+                        [(ngModel)]="Contact"
+                        name="Contact"
+                        [required]="true"
+                    />
                 </p-inputGroup>
             </div>
 
@@ -64,13 +68,14 @@
                     <p-inputGroupAddon>
                         <i class="pi pi-id-card"></i>
                     </p-inputGroupAddon>
-                    <input 
-                        type="number" 
-                        pInputText 
-                        placeholder="Aadhar No." 
-                        [(ngModel)]="Aadhar" 
-                        name="Aadhar" 
-                        [required]="true" />
+                    <input
+                        type="number"
+                        pInputText
+                        placeholder="Aadhar No."
+                        [(ngModel)]="Aadhar"
+                        name="Aadhar"
+                        [required]="true"
+                    />
                 </p-inputGroup>
             </div>
 
@@ -80,46 +85,53 @@
                     <p-inputGroupAddon>
                         <i class="pi pi-credit-card"></i>
                     </p-inputGroupAddon>
-                    <input 
-                        pInputText 
-                        placeholder="PAN No." 
-                        [(ngModel)]="Pan" 
-                        name="Pan" 
-                        [required]="true" />
+                    <input
+                        pInputText
+                        placeholder="PAN No."
+                        [(ngModel)]="Pan"
+                        name="Pan"
+                        [required]="true"
+                    />
                 </p-inputGroup>
             </div>
 
             <!-- File Upload -->
             <div class="p-field text-center">
-                <img [src]="imageSrc" alt="Uploaded File" class="uploaded-image-preview p-mb-3">
-                <p-fileUpload 
-                    mode="basic" 
-                    chooseLabel="Upload Profile Picture" 
-                    name="demo[]" 
-                    url="https://www.primefaces.org/cdn/api/upload.php" 
-                    accept=".jpg,.png,.jpeg" 
-                    auto="true" 
-                    [maxFileSize]="1000000" 
-                    (onUpload)="onUpload($event)" />
+                <img
+                    [src]="imageSrc"
+                    alt="Uploaded File"
+                    class="uploaded-image-preview p-mb-3"
+                />
+                <p-fileUpload
+                    mode="basic"
+                    chooseLabel="Upload Profile Picture"
+                    name="demo[]"
+                    url="https://www.primefaces.org/cdn/api/upload.php"
+                    accept=".jpg,.png,.jpeg"
+                    auto="true"
+                    [maxFileSize]="1000000"
+                    (onUpload)="onUpload($event)"
+                />
             </div>
 
             <!-- Buttons -->
             <div class="p-grid p-justify-center p-mt-3">
                 <div class="p-col-3">
-                    <p-button 
-                        label="Submit" 
-                        icon="pi pi-check" 
-                        (onClick)="addEmployee()" 
-                        class="p-button-success">
+                    <p-button
+                        label="Submit"
+                        icon="pi pi-check"
+                        (onClick)="addEmployee()"
+                        class="p-button-success"
+                    >
                     </p-button>
-                    <p-button 
-                    label="Cancel" 
-                    icon="pi pi-times" 
-                    class="p-button-secondary"
-                    onclick="cancelAdd()">
-                </p-button>
-            </div>
-                
+                    <p-button
+                        label="Cancel"
+                        icon="pi pi-times"
+                        class="p-button-secondary"
+                        onclick="cancelAdd()"
+                    >
+                    </p-button>
+                </div>
             </div>
         </form>
     </div>
