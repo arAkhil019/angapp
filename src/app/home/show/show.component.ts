@@ -8,7 +8,7 @@ import { ConfirmationService,MessageService } from 'primeng/api';
 import { DocumentData, QuerySnapshot } from 'firebase/firestore';
 import { EmployeeService } from '../../services/employee.service';
 import { SkeletonModule } from 'primeng/skeleton';
-import { collection, query, orderBy, startAfter, limit, getDocs } from 'firebase/firestore';
+import { RouterModule,Router } from '@angular/router';
 
 
 import { TableModule, Table } from 'primeng/table';
@@ -32,6 +32,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
   standalone: true,
   providers: [ConfirmationService, MessageService],
   imports: [
+    RouterModule,
     TableModule,
     InputTextModule,
     InputIconModule,
@@ -66,6 +67,7 @@ export class ShowComponent{
     employeeDialog: boolean = false;
     employees: Employee[] = [];
     employee!: Employee;
+    globalFilter: string | null = null;
     selectedEmployees: Employee[] | null = null;
     submitted: boolean = false;
     loading: boolean = true;
@@ -91,11 +93,12 @@ export class ShowComponent{
     private scrollThreshold = 90;
 
     constructor(
-        private EmployeeSerive: EmployeeService, 
+        private employeeService: EmployeeService, 
         private viewService: ViewService, 
         private confirmationService: ConfirmationService, 
         private messageService: MessageService,
-        private changeDetectorRef: ChangeDetectorRef
+        private changeDetectorRef: ChangeDetectorRef,
+        private router: Router
     ) {}
 
     ngOnInit() {
@@ -193,9 +196,9 @@ export class ShowComponent{
         this.subscriptions.forEach(sub => sub.unsubscribe());
     }
     openNew() {
-        // write code to divert page to form component
-        this.submitted = false;
-        this.employeeDialog = true;
+        // Navigate to the form component
+        console.log('Navigating to form component');
+        this.router.navigate(['/add']);
     }
 
     deleteSelectedEmployees() {
@@ -205,8 +208,11 @@ export class ShowComponent{
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
                 this.employees = this.employees.filter((val) => !this.selectedEmployees?.includes(val));
-                this.selectedEmployees = null;
                 this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Employees Deleted', life: 3000 });
+                if (this.selectedEmployees) {
+                    this.employeeService.deleteMultipleEmployees(this.selectedEmployees);
+                }
+                this.selectedEmployees = null;
             }
         });
     }
@@ -223,7 +229,7 @@ export class ShowComponent{
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
                 this.employees = this.employees.filter((val) => val.ID !== employee.ID);
-                this.EmployeeSerive.deleteEmployee(employee);
+                this.employeeService.deleteEmployee(employee);
                 //write code to reset the form
                 this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Employe Deleted', life: 3000 });
             }
@@ -241,12 +247,14 @@ export class ShowComponent{
         if (this.employee.Name?.trim()) {
             if (this.employee.ID) {
                 this.employees[this.findIndexById(this.employee.ID)] = this.employee;
+                this.employeeService.updateEmployee(this.employee);
                 this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Employee Updated', life: 3000 });
             } else {
                 this.employee.ID = this.createId();
                 this.employee.Proof = 'product-placeholder.svg'; // default image
                 this.employees.push(this.employee);
                 this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Employee Created', life: 3000 });
+                this.employeeService.addEmployee(this.employee);
             }
 
             this.employees = [...this.employees];

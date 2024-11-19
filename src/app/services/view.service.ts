@@ -140,6 +140,7 @@ export class ViewService {
 
                         if (data.Proof && typeof data.Proof === 'string') {
                             try {
+                                console.log('Fetching image URL:', data.Proof);
                                 const storageRef = ref(
                                     storage,
                                     `proofs/${data.Proof}`

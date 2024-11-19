@@ -1,6 +1,7 @@
 <p-toast></p-toast>
 <p-confirmDialog></p-confirmDialog>
 
+<!-- <a href="/">Go Home</a> -->
 <div class="card">
     <p-toolbar>
         <div class="flex flex-wrap gap-2">
@@ -15,7 +16,8 @@
         [value]="employees" 
         [rows]="10" 
         [paginator]="true" 
-        [globalFilterFields]="['Name','Type','Salaray']"
+        [globalFilterFields]="['Name', 'Type', 'Salaray']"
+        selectionMode="single"
         [(selection)]="selectedEmployees" 
         [rowHover]="true" 
         dataKey="ID"
@@ -25,14 +27,15 @@
         scrollHeight="400px"
         [virtualScroll]="virtualScroll"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
-        [showCurrentPageReport]="true">
+        [showCurrentPageReport]="true"
+        > <!-- Removed binding to the globalFilter variable -->
 
         <ng-template pTemplate="caption">
             <div class="flex justify-content-between align-items-center">
                 <h5 class="m-0">Manage Employees</h5>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
-                    <input pInputText type="text" placeholder="Search..." />
+                    <input pInputText type="text" placeholder="Search..." [(ngModel)]="globalFilter" /> <!-- Bind the search bar to globalFilter -->
                 </span>
             </div>
         </ng-template>
@@ -59,11 +62,11 @@
                 </td>
                 <td>
                     <img [src]="employee.imageUrl || '/assets/default-profile.png'" 
-                    [alt]="employee.Name" 
-                    width="50"
-                    height="50"
-                    style="object-fit: cover;"
-                    class="shadow-2 rounded-circle"/>
+                         [alt]="employee.Name" 
+                         width="50"
+                         height="50"
+                         style="object-fit: cover;"
+                         class="shadow-2 rounded-circle"/>
                 </td>
                 <td>{{employee.Name}}</td>
                 <td>{{employee.Salaray | currency:'INR'}}</td>
@@ -101,6 +104,7 @@
     </p-table>
 </div>
 
+<!-- Dialog for employee details -->
 <p-dialog 
     [(visible)]="employeeDialog" 
     [style]="{width: '450px'}" 
